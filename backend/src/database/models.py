@@ -1,5 +1,5 @@
 import os
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import *
 from flask_sqlalchemy import SQLAlchemy
 import json
 
@@ -38,31 +38,22 @@ def db_drop_and_create_all():
         title='water',
         recipe='[{"name": "water", "color": "blue", "parts": 1}]'
     )
-
-
     drink.insert()
-# ROUTES
 
+# ROUTES
 '''
 Drink
 a persistent drink entity, extends the base SQLAlchemy Model
 '''
-
-
 class Drink(db.Model):
-    # Autoincrementing, unique primary key
     id = Column(Integer().with_variant(Integer, "sqlite"), primary_key=True)
-    # String Title
     title = Column(String(80), unique=True)
-    # the ingredients blob - this stores a lazy json blob
-    # the required datatype is [{'color': string, 'name':string, 'parts':number}]
     recipe = Column(String(180), nullable=False)
 
     '''
     short()
         short form representation of the Drink model
     '''
-
     def short(self):
         print(json.loads(self.recipe))
         short_recipe = [{'color': r['color'], 'parts': r['parts']} for r in json.loads(self.recipe)]
@@ -71,12 +62,11 @@ class Drink(db.Model):
             'title': self.title,
             'recipe': short_recipe
         }
-
+    
     '''
     long()
         long form representation of the Drink model
     '''
-
     def long(self):
         return {
             'id': self.id,
